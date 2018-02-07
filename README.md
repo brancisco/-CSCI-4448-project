@@ -18,21 +18,20 @@ Object Oriented Design and Analysis class project.
 + Brandon Aguirre (brancisco)
 + Marco Ortiz Torres (marcoortiztorres)
 
-**Title:** Virtual Clicker
+**Title:** Rolypolly - A virtual polling system
 
-**Description:** A web application which allows users to connect to a central host and answer questions created by the host (similar to iclicker).
+**Description:** A web application which allows users to connect live to a central host and answer questions created by the host (similar to iclicker).
 
-**Actors:** Host, User, 
+**Actors:** User
 
 **Functionality:** 
 
-1. Hosts and Users can sign up.
-2. Hosts can create a "quiz".
-3. Users can take a quiz.
-4. Hosts can create a group.
-5. Users can get results.
-6. Hosts can record results
-7. Hosts can see statistics
+1. A host User can create a poll.
+2. A host User can start a session.
+3. Users can connect to a session.
+4. Users can answer questions to poll in session.
+5. The host user can reveal results at any time.
+6. Users can view statistics.
 
 ### NOTES:
 
