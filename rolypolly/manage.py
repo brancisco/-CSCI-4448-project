@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!../DJANGO_ENV/bin/python3
 import os
 import sys
 
