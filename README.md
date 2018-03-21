@@ -35,8 +35,12 @@ Object Oriented Design and Analysis class project.
 
 ### NOTES:
 
-Hey guys (Brandon here), make any changes you see fit! I'm not set on the name at all, so feel free to change that too (or give some suggestions). Once we all agree on the functionality / description and what not, I will turn the *Project Part 1* section into a PDF to submit!
-
 File should be named: `ProjectGroup#_TitleOfYourProject_Part1.pdf`
+
+Hey guys, I instaled a virtual env in our repo so that we all are using the same version of python and django.
+
+All you have to do is run this `/path/to/DJANGO_ENV/bin/python3` to use this version of python.. 
+
+At the top of the python files we should write `#!/path/to/DJANGO_ENV/bin/python3`
 
 ---
