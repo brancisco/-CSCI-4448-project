@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Welcome</title>	
+	<style type="text/css">
+		#main_content {
+			font-family: 'Helvetica-light';
+			text-align: center;
+			max-width: 600px;
+			margin: auto;
+		}
+
+		form div input {
+			text-align: center;
+		}
+
+		.user-option {
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div id="main_content">
+		<h1><strong>Roly</strong><span style="font-weight:lighter;">polly</span></h1>
+		<form action="/init_participant" method="POST">
+			<div class="user-option">
+				<label for="poll_code">Please Enter Your Poll Code</label>
+				<br>
+				<input id="poll_code" type="" name="">
+			</div>
+			<div class="user-option">
+				<label for="poll_name">Please Enter Your Name</label>
+				<br>
+				<input id="poll_name" type="" name="">
+			</div>
+			<button>Start Poll</button>
+		</form>
+	</div>
+</body>
+</html>
