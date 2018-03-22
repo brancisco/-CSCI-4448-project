@@ -1,9 +1,7 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
-from TextInterface import TextInterface
-
-class Answer(TextInterface):
+class Answer():
     def __init__(self, text=None, correct=None):
         self.text = text
         self.setCorrect(correct)
