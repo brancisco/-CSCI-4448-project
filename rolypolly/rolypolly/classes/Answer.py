@@ -4,7 +4,11 @@
 from TextInterface import TextInterface
 
 class Answer(TextInterface):
+<<<<<<< Updated upstream
     def __init__(self, text=None, correct=None):
+=======
+    def __init__(self, text=None, correct=False):
+>>>>>>> Stashed changes
         self.text = text
         self.setCorrect(correct)
 
