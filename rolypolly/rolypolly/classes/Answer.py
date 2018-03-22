@@ -1,8 +1,10 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
-class Answer():
-    def __init__(self, text=None, correct=None):
+from TextInterface import TextInterface
+
+class Answer(TextInterface):
+    def __init__(self, text=None, correct=False):
         self.text = text
         self.setCorrect(correct)
 
