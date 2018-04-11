@@ -6,12 +6,17 @@ from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from rolypolly.classes.User import *
-from dash.models import User
+from dash.models import *
 
 def index(request):
-	message = "No User"
+	message = ''
 	if request.method == "POST":
-		message = request.POST
+		try:
+			poll = Result.objects.get(code=request.POST['code'])
+			message = request.POST['name']
+			return render(request, 'welcome/success.html', {})
+		except:
+			message = 'No poll with that code'
 	return render(request, 'welcome/welcome.html', {'message': message})
 	# return HttpResponse("Welcome {}, this is our login / sign up page.".format(user.getName()))
 
@@ -19,7 +24,7 @@ def signup(request):
 	user = None
 	message = ''
 	if request.method == "POST":
-		
+
 		user = User(first_name=request.POST['first_name'],
 			last_name=request.POST['last_name'],
 			username=request.POST['username'],
@@ -55,3 +60,4 @@ def login(request):
 	if 'member_id' in request.session.keys():
 		return redirect('/dash')
 
+	return render(request, 'welcome/login.html', {'message': message})
