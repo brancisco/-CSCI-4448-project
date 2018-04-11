@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render_to_response
@@ -8,7 +9,6 @@ from rolypolly.classes.User import *
 from dash.models import User
 
 def index(request):
-	
 	message = "No User"
 	if request.method == "POST":
 		message = request.POST
@@ -55,4 +55,3 @@ def login(request):
 	if 'member_id' in request.session.keys():
 		return redirect('/dash')
 
-	
