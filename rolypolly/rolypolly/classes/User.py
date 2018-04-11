@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 from abc import ABC, abstractmethod
+from rolypolly.classes.Poll import *
 
 class User(ABC):
 	@abstractmethod
@@ -25,12 +26,6 @@ class Participant(User):
 	def dbStoreResponse(self, ):
 		pass
 
-	# def getName(self, ):
-	# 	pass
-
-	# def setName(self, name):
-	# 	pass
-
 	def getId(self, ):
 		pass
 
@@ -43,3 +38,11 @@ class Participant(User):
 	def getPollId(self, ):
 		pass
 
+class Host(User):
+	def __init__(self, name=None, id=None):
+		self.name = name
+		self.id = id
+		self.livePoll = None
+
+	def startPoll(self, host_id, pol_id):
+		self.livePoll = PollState(hostId=host_id, pid=pol_id)
