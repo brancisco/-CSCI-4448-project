@@ -147,6 +147,107 @@ class Answer extends TextInterface {
 	}
 }
 
+class PollGUI {
+	constructor() {
+		if (this.constructor === PollGUI) {
+            throw new TypeError('Abstract class "PollGUI" cannot be instantiated directly.'); 
+        }
+	}
+	draw() {
+		throw new Error('You have to implement the Abstract method draw!');
+	}
+}
+
+class PollGUIBase extends PollGUI {
+	constructor() {
+		super();
+		this.html = $('<div>').attr('id', 'question-wrapper');
+	}
+	draw(containerName) {
+		$(containerName).html(this.html);
+	}
+}
+
+class PollGUIDecorator extends PollGUI {
+	constructor(base) {
+		super();
+		if (this.constructor === PollGUIDecorator) {
+            throw new TypeError('Abstract class "PollGUIDecorator" cannot be instantiated directly.'); 
+        }
+		this.base = base;
+		this.html = base.html;
+	}
+	draw(containerName) {
+		$(containerName).replaceWith(this.html);
+	}
+}
+
+class QuestionDecorator extends PollGUIDecorator {
+	constructor(base, text) {
+		super(base);
+		var ind = this.base.html.has('.question').length;
+		var qWrap = $('<div>').addClass('question').attr('id', 'qWrap_'+ind);
+		var question = $('<textarea>').html(text).addClass('question-input').attr('id', 'q_'+ind);
+		var delQ = $('<button>').html('delete').attr('id', 'del_q_'+ind)
+			.click(function() {
+					delQuestion(this.id)
+				});
+
+		qWrap.append($('<h2>').html('Question '+(ind+1)))
+		qWrap.append(question);
+		qWrap.append(delQ);
+		qWrap.append('<h3>Answers</h3>');
+		this.base.html.append(qWrap);
+	}
+	draw(containerName) {
+		super.draw(containerName);
+	}
+}
+
+class AnswerDecorator extends PollGUIDecorator {
+	constructor(base, q_ind, a_ind, text, correct) {
+		super(base);
+		var ind = this.base.html.has('.question').length;
+		var qWrap = $(this.base.html.has('.question')[ind-1]);
+		var aWrap = $('<div>').addClass('answer');
+		aWrap.append($('<textarea>').addClass('q_'+q_ind+'_answer')
+			.attr('id', 'inp_q_'+q_ind+'_a_'+a_ind)
+			.attr('value', text)
+			.html(text));
+		var radio = $('<input>').addClass('selction_q_'+q_ind+'_answer')
+			.attr('type', 'radio')
+			.attr('name', 'q_'+q_ind+'_answer');
+		if (correct) {
+			radio.attr('checked', 'checked');
+		}
+		aWrap.append(radio);
+
+		aWrap.append($('<button>').html('delete')
+			.attr('id', 'del_q_'+q_ind+'_a_'+a_ind)
+			.click(function() {delAnswer(this.id)}))
+		aWrap.append('<br>');
+		qWrap.append($(aWrap));
+	}
+	draw(containerName) {
+		super.draw(containerName);
+	}
+}
+
+class AnswerButtonDecorator extends PollGUIDecorator {
+	constructor(base, q_ind) {
+		super(base);
+		var ind = this.base.html.has('.question').length;
+		var qWrap = $(this.base.html.has('.question')[ind-1]);
+		var addAnswerButton = $('<button>').html('add answer')
+			.attr('id', 'add_answer_q_'+q_ind)
+			.click(function() {addAnswer(this.id)})
+		qWrap.append(addAnswerButton);
+	}
+	draw(containerName) {
+		super.draw(containerName);
+	}
+}
+
 // var poll = new Poll('cool poll');
 // poll.addQuestion('Question # 1');
 // poll.addQuestion('Question # 2');

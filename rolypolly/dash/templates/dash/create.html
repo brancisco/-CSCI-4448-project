@@ -3,15 +3,15 @@
 <head>
 	<title>Create</title>
 	{% load static %}
-	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<p>Welcome, {{ username }}</p>
 	<h1>Create</h1>
 	<div id="question-wrapper"></div>
-
+	<br>
 	<button onclick="addQuestion();">Add Question</button>
 	<!-- updatePollObj will become save once implemented -->
 	<button onclick="updatePollObj();">Save</button>
@@ -22,38 +22,19 @@
 	});
 
 	function updateGUI() {
-		var questionWrapper = $('<div>').attr('id', 'question-wrapper');
+		var GUI = new PollGUIBase();
 		for(var i = 0; i < poll.questions.length; i ++) {
-			var question = $('<textarea>').html(poll.getQuestion(i)).addClass('question');
-			var delQ = $('<button>').html('delete').attr('id', 'del_q_'+i).click(function() {delQuestion(this.id)});
-			$(questionWrapper).append($('<h2>').html('Question'))
-			$(questionWrapper).append(question);
-			$(questionWrapper).append(delQ);
+			GUI = new QuestionDecorator(GUI, poll.getQuestion(i));
 			var answers = poll.getAnswers(i);
-			console.log(answers);
-			var answerWrapper = $('<div>');
 			for(var j = 0; j < answers.length; j ++) {
-				$(answerWrapper).append($('<textarea>').addClass('q_'+i+'_answer').attr('id', 'inp_q_'+i+'_a_'+j).attr('value', answers[j]).html(answers[j]));
-				var radio = $('<input>').addClass('selction_q_'+i+'_answer').attr('type', 'radio').attr('name', 'q_'+i+'_answer');
-				if (j == poll.getCorrect()[i]) {
-					radio.attr('checked', 'checked');
-				}
-				$(answerWrapper).append(radio);
-
-				$(answerWrapper).append($('<button>').html('delete').attr('id', 'del_q_'+i+'_a_'+j).click(function() {delAnswer(this.id)}))
-				$(answerWrapper).append('<br>');
+				GUI = new AnswerDecorator(GUI, i, j, answers[j], j == poll.getCorrect()[i]);
 			}
-			var addAnswerButton = $('<button>').html('add answer').attr('id', 'add_answer_q_'+i).click(function() {addAnswer(this.id)})
-			$(answerWrapper).append(addAnswerButton)
-
-			$(questionWrapper).append($('<h3>').html('Answers'));
-			$(questionWrapper).append(answerWrapper);
+			GUI = new AnswerButtonDecorator(GUI, i, j, answers[j]);
 		}
-		$('#question-wrapper').replaceWith(questionWrapper);
+		GUI.draw('#question-wrapper');
 	}
 	
 	function addQuestion() {
-		
 		poll.addQuestion();
 		updatePollObj();
 		updateGUI();
@@ -70,7 +51,6 @@
 	function delQuestion(q_ind) {
 		q_ind = q_ind.replace(/(del_q_)/i, '');
 		poll.delQuestion(q_ind);
-		// updatePollObj();
 		updateGUI();
 	}
 
@@ -83,7 +63,7 @@
 	}
 
 	function updatePollObj() {
-		var questions = $('.question');
+		var questions = $('.question-input');
 		for(var i = 0; i < questions.length; i ++) {
 			var answers = $('.q_'+i+'_answer');
 			poll.updateQuestion(i, questions[i].value);
