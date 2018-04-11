@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Welcome</title>	
+	<title>Login</title>	
 	{% load static %}
 	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,21 +9,20 @@
 <body>
 	<div id="main_content">
 		<h1><strong>Roly</strong><span style="font-weight:lighter;">polly</span></h1>
-		
-		{{ message.name }}
-		<form action="/welcome/" method="post">
+		{{ message }}
+		<form action="/welcome/login" method="post">
 			{% csrf_token %}
 			<div class="user-option">
-				<label for="poll_code">Please Enter The Poll Code</label>
+				<label for="username">Username</label>
 				<br>
-				<input id="poll_code" name="code">
+				<input id="username" name="username">
 			</div>
 			<div class="user-option">
-				<label for="poll_name">Please Enter Your Name</label>
+				<label for="password">Password</label>
 				<br>
-				<input id="poll_name" name="name">
+				<input id="password" name="password">
 			</div>
-			<button>Join Poll</button>
+			<button>Login</button>
 		</form>
 	</div>
 </body>
