@@ -13,38 +13,19 @@
 	<div id="question-wrapper"></div>
 
 	<button onclick="addQuestion();">Add Question</button>
-	<button onclick="savePoll();">Save</button>
+	<!-- updatePollObj will become save once implemented -->
+	<button onclick="updatePollObj();">Save</button>
 </body>
 <script type="text/javascript">
 	$(document).ready(function() {
 		poll = new Poll();
-		// create a quick test poll
-		// var poll = new Poll('cool poll');
-		// poll.addQuestion('is rolypolly cool?');
-		// poll.addQuestion('Is Marco the man?');
-		// poll.addQuestion('Is Lauren is the bomb.com?');
-		// poll.addQuestion('Is Brandon the coolest?');
-		// poll.addQuestion('Are you having fun yet?');
-
-		// for(var i = 0; i < poll.questions.length; i ++) {
-		// 	poll.addAnswer(i, 'yes');
-		// 	poll.addAnswer(i, 'no');
-		// 	var ind = Math.random();
-		// 	ind = (ind < 0.5? 0: 1);
-		// 	poll.setCorrect(i, ind)
-		// }
-
-
-		// load the questions in the DOM
-
-		
 	});
 
 	function updateGUI() {
 		var questionWrapper = $('<div>').attr('id', 'question-wrapper');
 		for(var i = 0; i < poll.questions.length; i ++) {
 			var question = $('<textarea>').html(poll.getQuestion(i)).addClass('question');
-			var delQ = $('<button>').html('delete').attr('id', 'del_q_'+i);
+			var delQ = $('<button>').html('delete').attr('id', 'del_q_'+i).click(function() {delQuestion(this.id)});
 			$(questionWrapper).append($('<h2>').html('Question'))
 			$(questionWrapper).append(question);
 			$(questionWrapper).append(delQ);
@@ -59,7 +40,7 @@
 				}
 				$(answerWrapper).append(radio);
 
-				$(answerWrapper).append($('<button>').html('delete').attr('id', 'del_q_'+i+'_a_'+j))
+				$(answerWrapper).append($('<button>').html('delete').attr('id', 'del_q_'+i+'_a_'+j).click(function() {delAnswer(this.id)}))
 				$(answerWrapper).append('<br>');
 			}
 			var addAnswerButton = $('<button>').html('add answer').attr('id', 'add_answer_q_'+i).click(function() {addAnswer(this.id)})
@@ -74,7 +55,7 @@
 	function addQuestion() {
 		
 		poll.addQuestion();
-		savePoll();
+		updatePollObj();
 		updateGUI();
 	}
 
@@ -82,15 +63,26 @@
 
 		q_ind = q_ind.replace(/(add_answer_q_)/i, '');
 		poll.addAnswer(q_ind);
-		savePoll();
+		updatePollObj();
 		updateGUI();
 	}
 
-	function del_question() {
-		$('').remove();
+	function delQuestion(q_ind) {
+		q_ind = q_ind.replace(/(del_q_)/i, '');
+		poll.delQuestion(q_ind);
+		// updatePollObj();
+		updateGUI();
 	}
 
-	function savePoll() {
+	function delAnswer(inds) {
+		q_ind = inds.replace(/del_q_/i, '');
+		q_ind = q_ind.replace(/_a_.+/i, '');
+		a_ind = inds.replace(/del_q_.+_a_/i, '');
+		poll.delAnswer(q_ind, a_ind);
+		updateGUI();
+	}
+
+	function updatePollObj() {
 		var questions = $('.question');
 		for(var i = 0; i < questions.length; i ++) {
 			var answers = $('.q_'+i+'_answer');
