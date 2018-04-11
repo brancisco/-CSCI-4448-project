@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create</title>
+	{% load static %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<p>Welcome, {{ username }}</p>
+	<h1>Create</h1>
+	<div id="question-wrapper"></div>
+	<br>
+	<button onclick="addQuestion();">Add Question</button>
+	<!-- updatePollObj will become save once implemented -->
+	<button onclick="updatePollObj();">Save</button>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		poll = new Poll();
+	});
+
+	function updateGUI() {
+		var GUI = new PollGUIBase();
+		for(var i = 0; i < poll.questions.length; i ++) {
+			GUI = new QuestionDecorator(GUI, poll.getQuestion(i));
+			var answers = poll.getAnswers(i);
+			for(var j = 0; j < answers.length; j ++) {
+				GUI = new AnswerDecorator(GUI, i, j, answers[j], j == poll.getCorrect()[i]);
+			}
+			GUI = new AnswerButtonDecorator(GUI, i, j, answers[j]);
+		}
+		GUI.draw('#question-wrapper');
+	}
+	
+	function addQuestion() {
+		poll.addQuestion();
+		updatePollObj();
+		updateGUI();
+	}
+
+	function addAnswer(q_ind) {
+
+		q_ind = q_ind.replace(/(add_answer_q_)/i, '');
+		poll.addAnswer(q_ind);
+		updatePollObj();
+		updateGUI();
+	}
+
+	function delQuestion(q_ind) {
+		q_ind = q_ind.replace(/(del_q_)/i, '');
+		poll.delQuestion(q_ind);
+		updateGUI();
+	}
+
+	function delAnswer(inds) {
+		q_ind = inds.replace(/del_q_/i, '');
+		q_ind = q_ind.replace(/_a_.+/i, '');
+		a_ind = inds.replace(/del_q_.+_a_/i, '');
+		poll.delAnswer(q_ind, a_ind);
+		updateGUI();
+	}
+
+	function updatePollObj() {
+		var questions = $('.question-input');
+		for(var i = 0; i < questions.length; i ++) {
+			var answers = $('.q_'+i+'_answer');
+			poll.updateQuestion(i, questions[i].value);
+			for(var j = 0; j < answers.length; j ++) {
+				poll.updateAnswer(i, j, answers[j].value);
+			}
+			var radios = $('input[name='+'q_'+i+'_answer'+']');
+			for(var j = 0; j < radios.length; j ++) {
+				if($(radios[j]).is(':checked'))
+					poll.setCorrect(i, j);
+			}
+		}
+
+	}
+
+</script>
+</html>

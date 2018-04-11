@@ -13,3 +13,10 @@ def index(request):
 	else:
 		redirect('/login')
 	return render(request, 'dash/dash.html', {'username': user.username})
+
+def create(request):
+	if 'member_id' in request.session.keys():
+		user = User.objects.get(pk=request.session['member_id'])
+	else:
+		redirect('/login')
+	return render(request, 'dash/create.html', {'username': user.username})
