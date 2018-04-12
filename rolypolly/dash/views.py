@@ -10,13 +10,15 @@ from dash.models import User
 def index(request):
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
+		return render(request, 'dash/dash.html', {'username': user.username})
 	else:
 		redirect('/login')
-	return render(request, 'dash/dash.html', {'username': user.username})
+
 
 def create(request):
+	user = None
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
+		return render(request, 'dash/create.html', {'username': user.username})
 	else:
 		redirect('/login')
-	return render(request, 'dash/create.html', {'username': user.username})

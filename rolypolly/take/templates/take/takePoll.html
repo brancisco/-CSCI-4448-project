@@ -10,19 +10,26 @@
 	<div id="main_content">
 		<h1><strong>
 			{{ pollName }}
-			{{ err }}
 		</span></h1>
+		<br>
+		{{ err }}
 	</div>
 	<form action="/welcome/" method="post">
 		{% csrf_token %}
 		<div class="current-question">
-			<h2>
+			<label>
 				{{ question }}
-			</h2>
+			</label>
 		</div>
 		<div class="current-answers">
-
+			{% for a in answer %}
+			<input type="radio" name="answer" value="0">
+			<a>
+				{{ a }}
+			</a> <br>
+			{% endfor %}
 		</div>
+		<button>Submit</button>
 	</form>
 </body>
 </html>
