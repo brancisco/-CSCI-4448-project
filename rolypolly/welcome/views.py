@@ -55,3 +55,4 @@ def login(request):
 	if 'member_id' in request.session.keys():
 		return redirect('/dash')
 
+	return render(request, 'welcome/login.html', {'message': message})
