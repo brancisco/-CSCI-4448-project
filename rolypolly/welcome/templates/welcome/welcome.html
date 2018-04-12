@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Welcome</title>	
+	<title>Welcome</title>
 	{% load static %}
 	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<div id="main_content">
-		<h1><strong>Roly</strong><span style="font-weight:lighter;">polly</span></h1>
-		
-		{{ message.name }}
+		<h1><strong>Roly</strong><span style="font-weight:lighter;">Polly</span></h1>
+		<font color="red">
+			{{ message }}
+		</font>
+		<br><br>
 		<form action="/welcome/" method="post">
 			{% csrf_token %}
 			<div class="user-option">

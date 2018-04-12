@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Take Poll</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div id="main_content">
+		<h1><strong>
+			{{ pollName }}
+			{{ err }}
+		</span></h1>
+	</div>
+	<form action="/welcome/" method="post">
+		{% csrf_token %}
+		<div class="current-question">
+			<h2>
+				{{ question }}
+			</h2>
+		</div>
+		<div class="current-answers">
+
+		</div>
+	</form>
+</body>
+</html>
