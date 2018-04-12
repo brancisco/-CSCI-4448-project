@@ -183,17 +183,16 @@ class PollGUIDecorator extends PollGUI {
 }
 
 class QuestionDecorator extends PollGUIDecorator {
-	constructor(base, text) {
+	constructor(base, text, q_ind) {
 		super(base);
-		var ind = this.base.html.has('.question').length;
-		var qWrap = $('<div>').addClass('question').attr('id', 'qWrap_'+ind);
-		var question = $('<textarea>').html(text).addClass('question-input').attr('id', 'q_'+ind);
-		var delQ = $('<button>').html('delete').attr('id', 'del_q_'+ind)
+		var qWrap = $('<div>').addClass('question').attr('id', 'qWrap_'+q_ind);
+		var question = $('<textarea>').html(text).addClass('question-input').attr('id', 'q_'+q_ind);
+		var delQ = $('<button>').html('delete').attr('id', 'del_q_'+q_ind)
 			.click(function() {
 					delQuestion(this.id)
 				});
 
-		qWrap.append($('<h2>').html('Question '+(ind+1)))
+		qWrap.append($('<h2>').html('Question '+(q_ind+1)))
 		qWrap.append(question);
 		qWrap.append(delQ);
 		qWrap.append('<h3>Answers</h3>');

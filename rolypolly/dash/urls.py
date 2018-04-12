@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
 	path('', views.index, name='index'),
-	path("create/", views.create, name='create'),
+	path('create/', views.create, name='create'),
+	path('ajax_save_poll', views.save_poll, name='save_poll'),
 ]

@@ -7,6 +7,7 @@ class User(User):
 class Poll(models.Model):
 	date_created 	= models.DateTimeField(auto_now_add=True)
 	host 			= models.ForeignKey('User', on_delete=models.CASCADE)
+	name			= models.CharField(max_length=255, default=None, blank=True, null=True)
 
 class Question(models.Model):
 	poll 	= models.ForeignKey('Poll', on_delete=models.CASCADE)
