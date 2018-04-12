@@ -14,7 +14,7 @@ class Question(Answer):
     def setCorrect(self, aid, correct):
         self.answers[aid].setCorrect(correct)
 
-    def addAnswer(self, text, correct);
+    def addAnswer(self, text, correct):
         answer = Answer(text, correct)
         self.answers.append(answer)
     
