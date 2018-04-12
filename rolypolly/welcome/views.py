@@ -14,7 +14,8 @@ def index(request):
 		try:
 			poll = Result.objects.get(code=request.POST['code'])
 			message = request.POST['name']
-			return render(request, 'welcome/success.html', {})
+			request.session['poll_code'] = request.POST['code']
+			return redirect('/take')
 		except:
 			message = 'No poll with that code'
 	return render(request, 'welcome/welcome.html', {'message': message})
