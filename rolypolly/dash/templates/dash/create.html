@@ -5,16 +5,19 @@
 	{% load static %}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'dash/create.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<p>Welcome, {{ username }}</p>
 	<h1>Create</h1>
+	<label for="poll_name">Enter Poll Name</label>
+	<input id="poll_name" type="text" name="poll_name">
 	<div id="question-wrapper"></div>
 	<br>
 	<button onclick="addQuestion();">Add Question</button>
 	<!-- updatePollObj will become save once implemented -->
-	<button onclick="updatePollObj();">Save</button>
+	<button onclick="savePoll();">Save</button>
 </body>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -24,7 +27,7 @@
 	function updateGUI() {
 		var GUI = new PollGUIBase();
 		for(var i = 0; i < poll.questions.length; i ++) {
-			GUI = new QuestionDecorator(GUI, poll.getQuestion(i));
+			GUI = new QuestionDecorator(GUI, poll.getQuestion(i), i);
 			var answers = poll.getAnswers(i);
 			for(var j = 0; j < answers.length; j ++) {
 				GUI = new AnswerDecorator(GUI, i, j, answers[j], j == poll.getCorrect()[i]);
@@ -76,7 +79,19 @@
 					poll.setCorrect(i, j);
 			}
 		}
+	}
 
+	function savePoll() {
+		updatePollObj();
+		$.ajax({
+			url: '/dash/ajax_save_poll',
+			data: {'data': JSON.stringify(poll.questions), 'poll_name': $('#poll_name').val()},
+			method: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+			}
+		})
 	}
 
 </script>

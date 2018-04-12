@@ -1,0 +1,24 @@
+#question-wrapper {
+	width: 700px;
+	margin: auto;
+}
+
+.question-input {
+	width: 90%;
+	min-height: 80px;
+}
+
+.question h3 {
+	margin-left: 50px;
+}
+
+.answer {
+	margin-left: 50px;
+	width: 70%;
+	margin-bottom: 10px;
+}
+
+.answer textarea {
+	width: 100%;
+	min-height: 50px;
+}
