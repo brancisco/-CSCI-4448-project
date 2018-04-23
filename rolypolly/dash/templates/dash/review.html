@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Review</title>
+	{% load static %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'dash/create.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<p>Welcome, {{ username }}</p>
+	<h1>Review</h1>
+	<label for="poll_name">Enter Poll Name</label>
+	<input id="poll_name" type="text" name="poll_name" value="{{ poll.name }}">
+	<input id="poll_id" type="text" name="poll_id" hidden value="{{ poll.id }}">
+	<div id="question-wrapper"></div>
+	<br>
+	<button onclick="addQuestion();">Add Question</button>
+	<!-- updatePollObj will become save once implemented -->
+	<button onclick="savePoll();">Save</button>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		poll = new Poll("{{ poll.name }}");
+		var questions = JSON.parse('{{ questions }}')
+		var i = 0;
+		for (var key in questions) {
+			poll.addQuestion(questions[key]['text'])
+			poll.setQId(i, questions[key]['id']);
+			console.log(questions[key]['answers'])
+			var j = 0
+			for (var ans in questions[key]['answers']) {
+				console.log(questions[key]['answers'][ans])
+				poll.addAnswer(questions[key]['order'], questions[key]['answers'][ans]['text'], questions[key]['answers'][ans]['correct'])
+				poll.setAId(i, j, questions[key]['answers'][ans]['id'])
+				j ++;
+			}
+			i ++;
+		}
+		updateGUI();
+	});
+
+	function reinitPoll(data) {
+		poll = new Poll(poll.getName);
+		var questions = JSON.parse(data.questions)
+		var i = 0;
+		for (var key in questions) {
+			poll.addQuestion(questions[key]['text'])
+			poll.setQId(i, questions[key]['id']);
+			console.log(questions[key]['answers'])
+			var j = 0
+			for (var ans in questions[key]['answers']) {
+				console.log(questions[key]['answers'][ans])
+				poll.addAnswer(questions[key]['order'], questions[key]['answers'][ans]['text'], questions[key]['answers'][ans]['correct'])
+				poll.setAId(i, j, questions[key]['answers'][ans]['id'])
+				j ++;
+			}
+			i ++;
+		}
+		updateGUI();
+	}
+
+	function updateGUI() {
+		var GUI = new PollGUIBase();
+		for(var i = 0; i < poll.questions.length; i ++) {
+			GUI = new QuestionDecorator(GUI, poll.getQuestion(i), i);
+			var answers = poll.getAnswers(i);
+			for(var j = 0; j < answers.length; j ++) {
+				GUI = new AnswerDecorator(GUI, i, j, answers[j], j == poll.getCorrect()[i]);
+			}
+			GUI = new AnswerButtonDecorator(GUI, i, j, answers[j]);
+		}
+		GUI.draw('#question-wrapper');
+	}
+	
+	function addQuestion() {
+		poll.addQuestion();
+		updatePollObj();
+		updateGUI();
+	}
+
+	function addAnswer(q_ind) {
+
+		q_ind = q_ind.replace(/(add_answer_q_)/i, '');
+		poll.addAnswer(q_ind);
+		updatePollObj();
+		updateGUI();
+	}
+
+	function delQuestion(q_ind) {
+		q_ind = q_ind.replace(/(del_q_)/i, '');
+		poll.delQuestion(q_ind);
+		updateGUI();
+	}
+
+	function delAnswer(inds) {
+		q_ind = inds.replace(/del_q_/i, '');
+		q_ind = q_ind.replace(/_a_.+/i, '');
+		a_ind = inds.replace(/del_q_.+_a_/i, '');
+		poll.delAnswer(q_ind, a_ind);
+		updateGUI();
+	}
+
+	function updatePollObj() {
+		var questions = $('.question-input');
+		for(var i = 0; i < questions.length; i ++) {
+			var answers = $('.q_'+i+'_answer');
+			poll.updateQuestion(i, questions[i].value);
+			for(var j = 0; j < answers.length; j ++) {
+				poll.updateAnswer(i, j, answers[j].value);
+			}
+			var radios = $('input[name='+'q_'+i+'_answer'+']');
+			for(var j = 0; j < radios.length; j ++) {
+				if($(radios[j]).is(':checked'))
+					poll.setCorrect(i, j);
+			}
+		}
+	}
+
+	function savePoll() {
+		updatePollObj();
+		$.ajax({
+			url: '/dash/ajax_update_poll',
+			data: {'data': JSON.stringify(poll.questions), 'poll_name': $('#poll_name').val(), 'poll_id': $('#poll_id').val()},
+			method: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				reinitPoll(data)
+			}
+		})
+	}
+
+</script>
+</html>

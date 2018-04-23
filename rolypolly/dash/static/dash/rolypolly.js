@@ -9,6 +9,18 @@ class Poll {
 	setName(name) {
 		this.name = name;
 	}
+	setQId(ind, id) {
+		this.questions[ind].setId(id);
+	}
+	getQId(ind) {
+		return this.questions[ind].getId();
+	}
+	setAId(q_ind, a_ind, id) {
+		this.questions[q_ind].setAId(a_ind, id)
+	}
+	getAId(q_ind, a_ind) {
+		return this.questions[q_ind].getAId(a_ind);
+	}
 	addQuestion(text) {
 		this.questions.push(new Question(text));
 		return this.questions.length-1;
@@ -78,6 +90,19 @@ class Question extends TextInterface {
 	constructor(text='') {
 		super(text);
 		this.answers = [];
+		this.id = null;
+	}
+	setId(id) {
+		this.id = id;
+	}
+	getId() {
+		return this.id;
+	}
+	setAId(ind, id) {
+		this.answers[ind].setId(id);
+	}
+	getAId(ind) {
+		return this.answers[ind].getId();
 	}
 	addAnswer(text, correct=false) {
 		this.answers.push(new Answer(text));
@@ -137,7 +162,14 @@ class Answer extends TextInterface {
 	
 	constructor(text='', correct=false) {
 		super(text);
+		this.id = null;
 		this.setCorrect(correct);
+	}
+	setId(id) {
+		this.id = id;
+	}
+	getId() {
+		return this.id;
 	}
 	setCorrect(correct) {
 		this.correct = correct;
