@@ -6,19 +6,38 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'dash/create.css' %}">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<p>Welcome, {{ username }}</p>
-	<h1>Review</h1>
-	<label for="poll_name">Enter Poll Name</label>
-	<input id="poll_name" type="text" name="poll_name" value="{{ poll.name }}">
-	<input id="poll_id" type="text" name="poll_id" hidden value="{{ poll.id }}">
-	<div id="question-wrapper"></div>
-	<br>
-	<button onclick="addQuestion();">Add Question</button>
-	<!-- updatePollObj will become save once implemented -->
-	<button onclick="savePoll();">Save</button>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<p>Welcome, {{ username }}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Review</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3">
+				<label for="poll_name">Enter Poll Name</label>
+				</div>
+				<div class="col-sm-6">
+				<input class='form-control' id="poll_name" type="text" name="poll_name" value="{{ poll.name }}">
+				<input id="poll_id" type="text" name="poll_id" hidden value="{{ poll.id }}">
+			</div>
+		</div>
+		<hr>
+		<div id="question-wrapper" class="row"></div>
+		<br>
+		<button class="btn btn-primary" onclick="addQuestion();">Add Question</button>
+		<!-- updatePollObj will become save once implemented -->
+		<button class="btn btn-secondary" onclick="savePoll();">Save</button>
+	</div>
 </body>
 <script type="text/javascript">
 	$(document).ready(function() {
