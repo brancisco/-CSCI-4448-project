@@ -135,7 +135,7 @@ def getPollJSON(poll_id):
 	for q in questions:
 		answers.append(Answer.objects.all().filter(question_id=q.id))
 
-		q_object = {}
+	q_object = {}
 	for i in range(len(questions)):
 		cur_q = questions[i]
 		q_id = 'q{}'.format(cur_q.id)
