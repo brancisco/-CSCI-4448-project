@@ -11,26 +11,27 @@ from rolypolly.classes.User import *
 from dash.models import *
 
 def index(request):
+
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
 		poll = Poll.objects.all().filter(host_id=user.id)
-		for p in poll:
-			print(p.name)
 	else:
-		redirect('/login')
+		return redirect('/login')
+	request.session.set_expiry(300)
 	return render(request, 'dash/dash.html', {'username': user.username, 'poll': poll})
 
 def create(request):
+	
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
 	else:
-		redirect('/login')
+		return redirect('/login')
+	request.session.set_expiry(300)
 	return render(request, 'dash/create.html', {'username': user.username})
 
 @csrf_exempt
 def save_poll(request):
 	try:
-
 		data = request.POST['data']
 		poll_name = request.POST['poll_name']
 		data = json.loads(data)
@@ -47,10 +48,11 @@ def save_poll(request):
 				answer = Answer(question_id=question.id, text=a['text'], is_correct=a['correct'], order=ai)
 				answer.save()
 				ai += 1
+		request.session.set_expiry(300)
 		return JsonResponse({'success': True})
 	except:
 		return JsonResponse({'success': False})
-
+		
 	return render(request, 'dash/create.html', {'username': user.username, })
 
 @csrf_exempt
@@ -106,6 +108,7 @@ def update_poll(request):
 				q.delete()
 
 		poll, q_object = getPollJSON(poll_id)
+		request.session.set_expiry(300)
 		return JsonResponse({'success': True, 'questions': json.dumps(q_object)})
 	except:
 		return JsonResponse({'success': False})
@@ -125,24 +128,27 @@ def delete_poll(request, poll_id):
 		return JsonResponse({'success': True})
 	except:
 		return JsonResponse({'success': False})
-		
+
 def start(request):
-	# if 'member_id' in request.session.keys():
-	# 	user = User.objects.get(pk=request.session['member_id'])
-	# else:
-	# 	redirect('/login')
+	if 'member_id' in request.session.keys():
+		user = User.objects.get(pk=request.session['member_id'])
+	else:
+		return redirect('/login')
 	poll = Poll.objects.get(pk=request.session['pol_id'])
+	request.session.set_expiry(300)
 	return render(request, {'poll_name': poll})
 
 def review(request, poll_id):
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
 	else:
-		redirect('/login')
+		return redirect('/login')
 	poll, q_object = getPollJSON(poll_id)
+	request.session.set_expiry(300)
 	return render(request, 'dash/review.html',{'username': user.username, 'poll': poll, 'questions': mark_safe(escapejs(json.dumps(q_object))) })
 
 def getPollJSON(poll_id):
+
 	poll = Poll.objects.get(pk=poll_id)
 	questions = Question.objects.all().filter(poll_id=poll_id)
 	answers = []
@@ -162,5 +168,5 @@ def getPollJSON(poll_id):
 			cur_a = answers[i][j]
 			answer = {'id': cur_a.id, 'text': cur_a.text, 'correct': cur_a.is_correct, 'order': cur_a.order}
 			q_object[q_id]['answers'].append(answer)
-
+	request.session.set_expiry(300)
 	return (poll, q_object)
