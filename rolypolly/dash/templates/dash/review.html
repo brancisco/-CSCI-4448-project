@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Create</title>
+	<title>Review</title>
 	{% load static %}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="{% static 'dash/rolypolly.js' %}"></script>
@@ -10,9 +10,10 @@
 </head>
 <body>
 	<p>Welcome, {{ username }}</p>
-	<h1>Create</h1>
+	<h1>Review</h1>
 	<label for="poll_name">Enter Poll Name</label>
-	<input id="poll_name" type="text" name="poll_name">
+	<input id="poll_name" type="text" name="poll_name" value="{{ poll.name }}">
+	<input id="poll_id" type="text" name="poll_id" hidden value="{{ poll.id }}">
 	<div id="question-wrapper"></div>
 	<br>
 	<button onclick="addQuestion();">Add Question</button>
@@ -21,8 +22,44 @@
 </body>
 <script type="text/javascript">
 	$(document).ready(function() {
-		poll = new Poll();
+		poll = new Poll("{{ poll.name }}");
+		var questions = JSON.parse('{{ questions }}')
+		var i = 0;
+		for (var key in questions) {
+			poll.addQuestion(questions[key]['text'])
+			poll.setQId(i, questions[key]['id']);
+			console.log(questions[key]['answers'])
+			var j = 0
+			for (var ans in questions[key]['answers']) {
+				console.log(questions[key]['answers'][ans])
+				poll.addAnswer(questions[key]['order'], questions[key]['answers'][ans]['text'], questions[key]['answers'][ans]['correct'])
+				poll.setAId(i, j, questions[key]['answers'][ans]['id'])
+				j ++;
+			}
+			i ++;
+		}
+		updateGUI();
 	});
+
+	function reinitPoll(data) {
+		poll = new Poll(poll.getName);
+		var questions = JSON.parse(data.questions)
+		var i = 0;
+		for (var key in questions) {
+			poll.addQuestion(questions[key]['text'])
+			poll.setQId(i, questions[key]['id']);
+			console.log(questions[key]['answers'])
+			var j = 0
+			for (var ans in questions[key]['answers']) {
+				console.log(questions[key]['answers'][ans])
+				poll.addAnswer(questions[key]['order'], questions[key]['answers'][ans]['text'], questions[key]['answers'][ans]['correct'])
+				poll.setAId(i, j, questions[key]['answers'][ans]['id'])
+				j ++;
+			}
+			i ++;
+		}
+		updateGUI();
+	}
 
 	function updateGUI() {
 		var GUI = new PollGUIBase();
@@ -84,13 +121,13 @@
 	function savePoll() {
 		updatePollObj();
 		$.ajax({
-			url: '/dash/ajax_save_poll',
-			data: {'data': JSON.stringify(poll.questions), 'poll_name': $('#poll_name').val()},
+			url: '/dash/ajax_update_poll',
+			data: {'data': JSON.stringify(poll.questions), 'poll_name': $('#poll_name').val(), 'poll_id': $('#poll_id').val()},
 			method: 'POST',
 			dataType: 'json',
 			success: function (data) {
 				console.log(data);
-				window.location = "/dash";
+				reinitPoll(data)
 			}
 		})
 	}
