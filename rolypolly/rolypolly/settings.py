@@ -80,7 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '/Users/lauren.raddatz/spring18/CSCI-4448-project/rolypolly/rolypolly.cnf',
+            'read_default_file': '/Users/brandonaguirre/Projects/cnf/rolypolly.cnf',
         },
     }
 }
@@ -126,4 +126,4 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

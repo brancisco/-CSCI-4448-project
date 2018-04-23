@@ -2,12 +2,26 @@
 <html>
 <head>
 	<title>Dashboard</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'dash/style.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<p>Welcome, {{ username }}</p>
 	<h1>Dashboard</h1>
 	<a href='/dash/create'>Create New Poll</a>
 	<h2>Available Polls</h2>
-	<a href='/dash/poll'> {{ poll_name }}</a>
+	<table>
+		<tr>
+			<th>Name</th>
+		</tr>
+		{% for p in poll%}
+		<tr>
+			<td>
+				<a href='/dash/review/{{ p.id }}'> {{ p.name }}</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
 </body>
 </html>
