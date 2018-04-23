@@ -16,26 +16,23 @@ def index(request):
     err = ''
     question = ''
     answer = ''
+    if request.method == "POST":
+
+        print("SUBMITTED")
     try:
         result = Result.objects.get(code = poll_code)
-        try:
-            poll = Poll.objects.get(pk = result.poll.id)
-            pollName = poll.Name
-            try:
-                quest = Question.objects.get(poll = result.poll.id, order = result.active_question)
-                question = quest.text
-                try:
-                    ans = Answer.objects.filter(question = quest.id)
-                    answer = [a.text for a in ans]
-                    return render(request, 'take/takePoll.html', {'pollName':pollName, 'question':question, 'answer':answer})
-                except:
-                    err = 'No answers avaliable'
-                    return render(request, 'take/takePoll.html', {'err':err,'pollName':pollName, 'question':question})
-            except:
-                err = 'No question to answer ¯\_(ツ)_/¯'
-            return render(request, 'take/takePoll.html', {'pollName':pollName, 'err': err})
-        except:
-            err = 'No poll name'
+        poll = Poll.objects.get(pk = result.poll.id)
+        pollName = poll.name
+        quest = Question.objects.get(poll = result.poll.id, order = result.active_question)
+        question = quest.text
+        ans = Answer.objects.filter(question = quest.id)
+        answer = [a.text for a in ans]
     except:
-        err = 'Poll no longer exists'
-    return render(request, 'take/takePoll.html', {'err': err})
+        err = 'No question to answer ¯\_(ツ)_/¯'
+        return render(request, 'take/takePoll.html', {'pollName':pollName, 'err': err})
+
+    print("... ... ...")
+    return render(request, 'take/takePoll.html', {'pollName':pollName, 'question':question, 'answer':answer})
+
+def takePoll(request):
+    print("This is what happends")

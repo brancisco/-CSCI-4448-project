@@ -8,28 +8,26 @@
 </head>
 <body>
 	<div id="main_content">
-		<h1><strong>
-			{{ pollName }}
-		</span></h1>
-		<br>
-		{{ err }}
+		<div class="poll-name">
+			<h2><strong>{{ pollName }}</strong></h2><br>
+		</div>
+
+		<form action="/take/" method="post">
+			{% csrf_token %}
+			<div class="current-question">
+				<label>{{ question }}</label>
+			</div>
+			<div class="current-answers">
+				{% for a in answer %}
+				<div style="font-weight: bold; padding-bottom: 2%;">
+					<input type="radio" name="answer" value="{{ forloop.counter0 }}">
+					<label style="padding-left: 5%; font-size: 16px;">{{ a }}</label> <br>
+				</div>
+				{% endfor %}
+			</div>
+			<button class="button"><strong>Submit</strong></button>
+		</form>
+		<font color="red">{{ err }}</font>
 	</div>
-	<form action="/welcome/" method="post">
-		{% csrf_token %}
-		<div class="current-question">
-			<label>
-				{{ question }}
-			</label>
-		</div>
-		<div class="current-answers">
-			{% for a in answer %}
-			<input type="radio" name="answer" value="0">
-			<a>
-				{{ a }}
-			</a> <br>
-			{% endfor %}
-		</div>
-		<button>Submit</button>
-	</form>
 </body>
 </html>
