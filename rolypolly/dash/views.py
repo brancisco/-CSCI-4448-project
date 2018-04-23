@@ -115,18 +115,16 @@ def update_poll(request):
 
 	return render(request, 'dash/review/{}'.format(poll_id), {'username': user.username, })
 
-
 @csrf_exempt
 def delete_poll(request, poll_id):
-
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
 	else:
-		return redirect('/login')
+		redirect('/login')
+
 	try:
 		del_poll = Poll.objects.get(pk=poll_id)
 		del_poll.delete()
-		request.session.set_expiry(300)
 		return JsonResponse({'success': True})
 	except:
 		return JsonResponse({'success': False})
