@@ -1,6 +1,5 @@
 #question-wrapper {
-	width: 700px;
-	margin: auto;
+	max-width: 700px;
 }
 
 .question-input {
@@ -9,16 +8,20 @@
 }
 
 .question h3 {
-	margin-left: 50px;
+	margin-left: 30px;
 }
 
 .answer {
-	margin-left: 50px;
-	width: 70%;
+	margin-left: 30px;
+	max-width: 70%;
 	margin-bottom: 10px;
 }
 
-.answer textarea {
-	width: 100%;
-	min-height: 50px;
+/*.answer input {
+	max-width: 100%;
+	min-height: 30px;
+}
+*/
+.answer-button {
+	margin-left: 30px;
 }

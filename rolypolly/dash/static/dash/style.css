@@ -1,3 +1,19 @@
-table, th, td {
-    border: 1px solid black;
+table a {
+    text-decoration: none;
+    color: black;
+}
+
+table a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+table a:hover {
+	text-decoration: none;
+	color: black;
+}
+
+#polls_table {
+	max-width: 1000px;
+	/*margin-left: 5%;*/
 }

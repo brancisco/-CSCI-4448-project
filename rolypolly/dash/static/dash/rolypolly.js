@@ -218,15 +218,21 @@ class QuestionDecorator extends PollGUIDecorator {
 	constructor(base, text, q_ind) {
 		super(base);
 		var qWrap = $('<div>').addClass('question').attr('id', 'qWrap_'+q_ind);
-		var question = $('<textarea>').html(text).addClass('question-input').attr('id', 'q_'+q_ind);
-		var delQ = $('<button>').html('delete').attr('id', 'del_q_'+q_ind)
+		var question = $('<textarea>').html(text)
+			.addClass('form-control question-input').attr('id', 'q_'+q_ind);
+		var delQ = $('<button>').addClass('btn btn-outline-danger')
+			.html('delete').attr('id', 'del_q_'+q_ind)
 			.click(function() {
 					delQuestion(this.id)
 				});
+		var qHeadWrap = $('<div>').addClass('row');
 
-		qWrap.append($('<h2>').html('Question '+(q_ind+1)))
-		qWrap.append(question);
-		qWrap.append(delQ);
+		qHeadWrap.append($('<div>').addClass('col-sm-4')
+			.html($('<h2>').html('Question '+(q_ind+1))))
+		qHeadWrap.append($('<div>').addClass('col-sm-2').html(delQ));
+		qWrap.append(qHeadWrap);
+		qWrap.append($('<div>').addClass('col-md-12').html(question));
+		
 		qWrap.append('<h3>Answers</h3>');
 		this.base.html.append(qWrap);
 	}
@@ -238,26 +244,32 @@ class QuestionDecorator extends PollGUIDecorator {
 class AnswerDecorator extends PollGUIDecorator {
 	constructor(base, q_ind, a_ind, text, correct) {
 		super(base);
-		var ind = this.base.html.has('.question').length;
-		var qWrap = $(this.base.html.has('.question')[ind-1]);
-		var aWrap = $('<div>').addClass('answer');
-		aWrap.append($('<textarea>').addClass('q_'+q_ind+'_answer')
-			.attr('id', 'inp_q_'+q_ind+'_a_'+a_ind)
-			.attr('value', text)
-			.html(text));
+		var ind = $(this.base.html).find('.question').length;
+		var qWrap = $(this.base.html).find('.question')[ind-1];
+		var aWrap = $('<div>').addClass('answer input-group');
+		var radioWrap = $('<div>').addClass('input-group-prepend');
+		var radioInnerWrap = $('<div>').addClass('input-group-text');
 		var radio = $('<input>').addClass('selction_q_'+q_ind+'_answer')
 			.attr('type', 'radio')
 			.attr('name', 'q_'+q_ind+'_answer');
 		if (correct) {
 			radio.attr('checked', 'checked');
 		}
-		aWrap.append(radio);
-
-		aWrap.append($('<button>').html('delete')
+		radioWrap.append(radioInnerWrap.append(radio))
+		aWrap.append(radioWrap);
+		aWrap.append($('<input>').addClass('q_'+q_ind+'_answer form-control')
+			.attr('id', 'inp_q_'+q_ind+'_a_'+a_ind)
+			.attr('value', text)
+			.attr('type', 'text')
+			.html(text));
+		var buttonWrap = $('<div>').addClass('input-group-append');
+		buttonWrap.append($('<button>').addClass('btn btn-outline-danger')
+			.html('<i class="fas fa-trash-alt"></i>')
 			.attr('id', 'del_q_'+q_ind+'_a_'+a_ind)
-			.click(function() {delAnswer(this.id)}))
+			.click(function() {delAnswer(this.id)}));
+		aWrap.append(buttonWrap);
 		aWrap.append('<br>');
-		qWrap.append($(aWrap));
+		$(qWrap).append($(aWrap));
 	}
 	draw(containerName) {
 		super.draw(containerName);
@@ -269,10 +281,12 @@ class AnswerButtonDecorator extends PollGUIDecorator {
 		super(base);
 		var ind = this.base.html.has('.question').length;
 		var qWrap = $(this.base.html.has('.question')[ind-1]);
-		var addAnswerButton = $('<button>').html('add answer')
+		var addAnswerButton = $('<button>').addClass('answer-button btn btn-outline-success').
+		html('add answer')
 			.attr('id', 'add_answer_q_'+q_ind)
 			.click(function() {addAnswer(this.id)})
 		qWrap.append(addAnswerButton);
+		qWrap.append('<hr>')
 	}
 	draw(containerName) {
 		super.draw(containerName);
