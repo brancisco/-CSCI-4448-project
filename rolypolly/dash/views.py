@@ -70,6 +70,7 @@ def update_poll(request):
 			try:
 				question = Question.objects.get(pk=q['id'])
 				question.text = q['text']
+				question.order = q['order']
 				question.save()
 				q_ids.append(q['id'])
 				print('updated old')
@@ -87,6 +88,7 @@ def update_poll(request):
 					answer = Answer.objects.get(pk=a['id'])
 					answer.text = a['text']
 					answer.is_correct = a['correct']
+					answer.order = a['order']
 					answer.save()
 					a_ids.append(a['id'])
 				except:

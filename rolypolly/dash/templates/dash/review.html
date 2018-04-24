@@ -43,15 +43,19 @@
 	$(document).ready(function() {
 		poll = new Poll("{{ poll.name }}");
 		var questions = JSON.parse('{{ questions }}')
+		console.log(questions)
 		var i = 0;
 		for (var key in questions) {
-			poll.addQuestion(questions[key]['text'])
+			poll.addQuestion(questions[key]['text']);
+			poll.setQOrder(questions[key]['order'], questions[key]['order']);
 			poll.setQId(i, questions[key]['id']);
 			console.log(questions[key]['answers'])
 			var j = 0
 			for (var ans in questions[key]['answers']) {
 				console.log(questions[key]['answers'][ans])
 				poll.addAnswer(questions[key]['order'], questions[key]['answers'][ans]['text'], questions[key]['answers'][ans]['correct'])
+				poll.setAOrder(questions[key]['order'], questions[key]['answers'][ans]['order'], questions[key]['answers'][ans]['order'])
+				console.log(poll)
 				poll.setAId(i, j, questions[key]['answers'][ans]['id'])
 				j ++;
 			}
@@ -66,12 +70,14 @@
 		var i = 0;
 		for (var key in questions) {
 			poll.addQuestion(questions[key]['text'])
+			poll.setQOrder(questions[key]['order'], questions[key]['order']);
 			poll.setQId(i, questions[key]['id']);
 			console.log(questions[key]['answers'])
 			var j = 0
 			for (var ans in questions[key]['answers']) {
 				console.log(questions[key]['answers'][ans])
 				poll.addAnswer(questions[key]['order'], questions[key]['answers'][ans]['text'], questions[key]['answers'][ans]['correct'])
+				poll.setAOrder(questions[key]['order'], questions[key]['answers'][ans]['order'], questions[key]['answers'][ans]['order'])
 				poll.setAId(i, j, questions[key]['answers'][ans]['id'])
 				j ++;
 			}

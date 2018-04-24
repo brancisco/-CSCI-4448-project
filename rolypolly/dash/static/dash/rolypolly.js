@@ -21,6 +21,18 @@ class Poll {
 	getAId(q_ind, a_ind) {
 		return this.questions[q_ind].getAId(a_ind);
 	}
+	setQOrder(q_ind, order) {
+		this.questions[q_ind].setOrder(order);
+	}
+	getQOrder(q_ind) {
+		return this.questions[q_ind].getOrder();
+	}
+	setAOrder(q_ind, a_ind, order) {
+		this.questions[q_ind].setAOrder(a_ind, order);
+	}
+	getAOrder(q_ind, a_ind) {
+		return this.questions[q_ind].getAOrder(a_ind);
+	}
 	addQuestion(text) {
 		this.questions.push(new Question(text));
 		return this.questions.length-1;
@@ -34,17 +46,22 @@ class Poll {
 	delQuestion(ind) {
 		var temp = [];
 		for(var i = 0; i < this.questions.length; i ++) {
+			if(i > ind) {
+				this.setQOrder(i, i-1)
+			}
 			if(i != ind) {
 				temp.push(this.questions[i]);
 			}
 		}
 		this.questions = temp;
+		console.log(this.questions);
 	}
 	updateQuestion(ind, text) {
 		if (ind < this.questions.length)
 			this.questions[ind].setText(text);
 	}
 	addAnswer(q_ind, text='', correct=false) {
+		console.log(q_ind)
 		if (q_ind < this.questions.length)
 			this.questions[q_ind].addAnswer(text, correct);
 	}
@@ -91,6 +108,7 @@ class Question extends TextInterface {
 		super(text);
 		this.answers = [];
 		this.id = null;
+		this.order = null;
 	}
 	setId(id) {
 		this.id = id;
@@ -98,11 +116,25 @@ class Question extends TextInterface {
 	getId() {
 		return this.id;
 	}
+	setOrder(order) {
+		this.order = order;
+	}
+	getOrder() {
+		return this.order;
+	}
 	setAId(ind, id) {
+		console.log(this.answers)
+		console.log(ind)
 		this.answers[ind].setId(id);
 	}
 	getAId(ind) {
 		return this.answers[ind].getId();
+	}
+	setAOrder(a_ind, order) {
+		this.answers[a_ind].setOrder(order);
+	}
+	getAOrder(a_ind) {
+		return this.answers[a_ind].getOrder();
 	}
 	addAnswer(text, correct=false) {
 		this.answers.push(new Answer(text));
@@ -113,11 +145,15 @@ class Question extends TextInterface {
 	delAnswer(ind) {
 		var temp = [];
 		for(var i = 0; i < this.answers.length; i ++) {
+			if(i > ind) {
+				this.setAOrder(i, i-1)
+			}
 			if(i != ind) {
 				temp.push(this.answers[i]);
 			}
 		}
 		this.answers = temp;
+		console.log(this.answers)
 	}
 	updateAnswer(ind, text, correct=null) {
 		if(ind < this.answers.length) {
@@ -163,7 +199,14 @@ class Answer extends TextInterface {
 	constructor(text='', correct=false) {
 		super(text);
 		this.id = null;
+		this.order = null;
 		this.setCorrect(correct);
+	}
+	setOrder(order) {
+		this.order = order;
+	}
+	getOrder() {
+		return this.order;
 	}
 	setId(id) {
 		this.id = id;
