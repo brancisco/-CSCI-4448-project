@@ -170,5 +170,4 @@ def getPollJSON(poll_id):
 			cur_a = answers[i][j]
 			answer = {'id': cur_a.id, 'text': cur_a.text, 'correct': cur_a.is_correct, 'order': cur_a.order}
 			q_object[q_id]['answers'].append(answer)
-	request.session.set_expiry(300)
 	return (poll, q_object)
