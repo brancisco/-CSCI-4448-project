@@ -35,10 +35,9 @@ def index(request):
     if request.method == "POST":
         try:
             oid = request.POST.get('answer')
-            response = Answer.objects.get(id = oid)
-            r = Response(result=result, question=quest, answer=response)
+            r = Response(result_id=result.id, question_id=quest.id, answer_id=oid)
             r.save()
-            return render(request, 'take/waitPage.html', {'pollName':pollName, 'poll_code':poll_code, 'response':response})
+            return render(request, 'take/waitPage.html', {'pollName':pollName, 'poll_code':poll_code, 'response':oid})
         except:
             print("fail")
             return JsonResponse({'success': False})
