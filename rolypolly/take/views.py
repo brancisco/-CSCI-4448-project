@@ -1,14 +1,16 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
-
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
-from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.utils.html import escapejs
+from django.utils.safestring import mark_safe
 from rolypolly.classes.User import *
 from dash.models import *
+from take.models import Response
 
-from django.core import serializers
 
 def index(request):
     poll_code = request.session.get('poll_code')
@@ -16,9 +18,7 @@ def index(request):
     err = ''
     question = ''
     answer = ''
-    if request.method == "POST":
-
-        print("SUBMITTED")
+    response = ''
     try:
         result = Result.objects.get(code = poll_code)
         poll = Poll.objects.get(pk = result.poll.id)
@@ -26,13 +26,23 @@ def index(request):
         quest = Question.objects.get(poll = result.poll.id, order = result.active_question)
         question = quest.text
         ans = Answer.objects.filter(question = quest.id)
-        answer = [a.text for a in ans]
+        # answer = [a.text for a in ans]
+        # ids = [a.id for a in ans]
     except:
         err = 'No question to answer ¯\_(ツ)_/¯'
         return render(request, 'take/takePoll.html', {'pollName':pollName, 'err': err})
 
-    print("... ... ...")
-    return render(request, 'take/takePoll.html', {'pollName':pollName, 'question':question, 'answer':answer})
+    if request.method == "POST":
+        try:
+            oid = request.POST.get('answer')
+            response = Answer.objects.get(id = oid)
+            r = Response(result=result, question=quest, answer=response)
+            r.save()
+            return render(request, 'take/waitPage.html', {'pollName':pollName, 'poll_code':poll_code, 'response':response})
+        except:
+            print("fail")
+            return JsonResponse({'success': False})
+    return render(request, 'take/takePoll.html', {'pollName':pollName, 'question':question, 'answer':ans})
 
-def takePoll(request):
-    print("This is what happends")
+def wait(request):
+    print("We are now waiting")

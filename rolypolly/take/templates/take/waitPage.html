@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Please Wait</title>
+	{% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div id="main_content">
+		<p id="currentQ"></p>
+		<p id="newQ"></p>
+		<div class="poll-name">
+			<h2><strong>{{ pollName }}</strong></h2><br>
+		</div>
+        <div>
+		    <label> Answer submitted? </label>
+            <br/><br/>
+            <label> Waiting for next question </label>
+            <br/><br/>
+        </div>
+	</div>
+</body>
+<script>
+
+</script>
+</html>

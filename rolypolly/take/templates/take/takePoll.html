@@ -5,6 +5,7 @@
 	{% load static %}
 	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="refresh" content="10" >
 </head>
 <body>
 	<div id="main_content">
@@ -20,8 +21,8 @@
 			<div class="current-answers">
 				{% for a in answer %}
 				<div style="font-weight: bold; padding-bottom: 2%;">
-					<input type="radio" name="answer" value="{{ forloop.counter0 }}">
-					<label style="padding-left: 5%; font-size: 16px;">{{ a }}</label> <br>
+					<input type="radio" name="answer" value="{{ a.id }}">
+					<label style="padding-left: 5%; font-size: 16px;">{{ a.text }}</label> <br>
 				</div>
 				{% endfor %}
 			</div>
