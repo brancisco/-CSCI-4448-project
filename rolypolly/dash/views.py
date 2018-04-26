@@ -21,9 +21,10 @@ def index(request):
 	return render(request, 'dash/dash.html', {'username': user.username, 'poll': poll})
 
 def create(request):
-	
+
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
+		return render(request, 'dash/create.html', {'username': user.username})
 	else:
 		return redirect('/login')
 	request.session.set_expiry(300)
@@ -36,6 +37,7 @@ def save_poll(request):
 		poll_name = request.POST['poll_name']
 		data = json.loads(data)
 		questions = data
+
 		poll = Poll(name=poll_name, host_id=1)
 		poll.save()
 		qi = 0
@@ -52,7 +54,7 @@ def save_poll(request):
 		return JsonResponse({'success': True})
 	except:
 		return JsonResponse({'success': False})
-		
+
 	return render(request, 'dash/create.html', {'username': user.username, })
 
 @csrf_exempt
@@ -168,5 +170,8 @@ def getPollJSON(poll_id):
 			cur_a = answers[i][j]
 			answer = {'id': cur_a.id, 'text': cur_a.text, 'correct': cur_a.is_correct, 'order': cur_a.order}
 			q_object[q_id]['answers'].append(answer)
-	request.session.set_expiry(300)
+<<<<<<< HEAD
+=======
+
+>>>>>>> b90d3db33db762999d883c6d9b9dd2538ad947d9
 	return (poll, q_object)
