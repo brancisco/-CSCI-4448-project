@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
 	path('', views.index, name='index'),
-	path('waitPage', views.wait, name='waitPage'),
+	path('ajax_wait', views.wait, name='waitPage'),
 ]

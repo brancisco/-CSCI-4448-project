@@ -5,6 +5,9 @@
 	{% load static %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -12,17 +15,43 @@
 		<p id="currentQ"></p>
 		<p id="newQ"></p>
 		<div class="poll-name">
-			<h2><strong>{{ pollName }}</strong></h2><br>
+			<h2><strong>{{ poll.name }}</strong></h2><br>
 		</div>
         <div>
 		    <label> Answer submitted? </label>
             <br/><br/>
             <label> Waiting for next question </label>
+            <div>
+            	<i class="fas fa-spinner-third "></i>
+        	</div>
             <br/><br/>
         </div>
 	</div>
 </body>
 <script>
+	$(document).ready(function() {
+		checkDatabase(0);
+	});
 
+	function checkDatabase(ith_check) {
+		$.ajax({
+			url: '/take/ajax_wait',
+			data: {'poll_id': '{{ poll.id }}', 'waiting_on': '{{ question.id }}', 'check': ith_check},
+			method: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				if(data.NEXTQ && data.NEXTQ === true) {
+					window.location = '/take';
+				}
+				if(data.CHECK_NUMBER == 'TIMED_OUT') {
+					window.location = '/welcome'
+				}
+			},
+			complete: function(data) {
+				setTimeout(function() {checkDatabase(ith_check+1);}, 5000);
+			}
+		});
+	}
 </script>
 </html>

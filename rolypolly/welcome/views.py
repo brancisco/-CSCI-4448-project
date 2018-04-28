@@ -10,11 +10,17 @@ from dash.models import *
 
 def index(request):
 	message = ''
+	if request.session.get('started'):
+		return redirect('/take')
 	if request.method == "POST":
 		try:
 			poll = Result.objects.get(code=request.POST['code'])
 			message = request.POST['name']
+			request.session['started'] = True
+			request.session['answered'] = {}
 			request.session['poll_code'] = request.POST['code']
+			request.session['qoid'] = Result.objects.get(code=request.POST['code']).active_question
+			request.session.set_expiry(900)
 			return redirect('/take')
 		except:
 			message = 'No poll with that code'
@@ -60,5 +66,5 @@ def login(request):
 
 	if 'member_id' in request.session.keys():
 		return redirect('/dash')
-		
+
 	return render(request, 'welcome/login.html', {'message': message})
