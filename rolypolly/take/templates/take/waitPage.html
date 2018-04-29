@@ -44,7 +44,10 @@
 				if(data.NEXTQ && data.NEXTQ === true) {
 					window.location = '/take';
 				}
-				if(data.CHECK_NUMBER == 'TIMED_OUT') {
+				else if(data.FINISH && data.FINISH == true) {
+					window.location = '/welcome';
+				}
+				else if(data.CHECK_NUMBER == 'TIMED_OUT') {
 					window.location = '/welcome'
 				}
 			},

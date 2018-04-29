@@ -13,7 +13,6 @@ from take.models import Response
 
 
 def index(request):
-    # request.session.clear()
     poll_code = request.session.get('poll_code')
     pollName = ''
     err = ''
@@ -22,6 +21,9 @@ def index(request):
     response = ''
     try:
         result = Result.objects.get(code = poll_code)
+        if result.date_closed:
+            request.session.clear()
+            return redirect('/welcome')
         poll = Poll.objects.get(pk = result.poll.id)
         pollName = poll.name
         quest = Question.objects.get(poll = result.poll.id, order = result.active_question)
@@ -56,7 +58,13 @@ def wait(request):
         poll_id = request.session.get('poll_id')
         qoid = request.session.get('qoid')
         check = request.POST.get('check')
+
         active_question = Result.objects.get(code=poll_code).active_question
+        is_closed = Result.objects.get(code=poll_code).date_closed
+        if is_closed:
+            request.session.clear()
+            request.session['thanks'] = True
+            return JsonResponse({'success': True, 'FINISH': True})
 
         if int(active_question) != int(qoid):
             request.session['qoid'] = active_question

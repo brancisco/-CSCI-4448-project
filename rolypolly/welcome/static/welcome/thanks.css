@@ -1,0 +1,15 @@
+p {
+	text-align: center;
+}
+
+#thanks_title {
+	margin-top: 50px;
+	text-align: center;
+}
+
+#rolypolly_img {
+	display: block;
+	width: 50%;
+	margin: auto;
+	margin-bottom: 20px;
+}
