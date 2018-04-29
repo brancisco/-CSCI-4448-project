@@ -33,7 +33,7 @@ def index(request):
 
 			request.session['poll_code'] = participant.getPollCode()
 			request.session['qoid'] = result.active_question
-			
+
 			return redirect('/take')
 		except:
 			message = 'No poll with that code'
@@ -78,5 +78,5 @@ def login(request):
 
 	if 'member_id' in request.session.keys():
 		return redirect('/dash')
-		
+
 	return render(request, 'welcome/login.html', {'message': message})

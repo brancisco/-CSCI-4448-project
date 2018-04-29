@@ -13,7 +13,6 @@ from take.models import Response
 
 
 def index(request):
-
     poll_code = request.session.get('poll_code')
     pollName = ''
     err = ''
@@ -59,7 +58,7 @@ def wait(request):
         poll_id = request.session.get('poll_id')
         qoid = request.session.get('qoid')
         check = request.POST.get('check')
-        print(poll_code)
+
         active_question = Result.objects.get(code=poll_code).active_question
         is_closed = Result.objects.get(code=poll_code).date_closed
         if is_closed:
