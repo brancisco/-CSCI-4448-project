@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% load static %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'dash/style.css' %}">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>RolyPolly | Launch</title>
+</head>
+<body>
+	<div class="container">
+
+		<div class="row">
+			<div class="col-sm-12">
+				<p>Smile <u>{{ username }}</u>, you're live.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-8">
+				<h1>{{ poll.name }} : <span class="badge badge-info">{{ result.code }}</span></h1>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-6">
+				<h2>Question : {{ question.text }}</h2>
+				<div class="panel panel-default">
+					<!-- List group -->
+					<ul class="list-group">
+						{% for a in answer %}
+						<li class="list-group-item"><h4>{{ a.text }}</h4></li>
+						{% endfor %}
+					</ul>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<button class="btn btn-outline-secondary" onclick="return backQuestion()"><i class="fas fa-chevron-left"></i> Back</button>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-outline-secondary" onclick="return nextQuestion()">Next <i class="fas fa-chevron-right"></i></button>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-outline-danger" onclick="return closeResult()">Close</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<canvas id="myChart" width="400" height="400"></canvas>
+			</div>
+		</div>
+		<br>
+	</div>
+</body>
+<script type="text/javascript">
+	$(document).ready(function() {
+		ctx = document.getElementById("myChart");
+		checkDBSubmission(0);
+	});
+
+	function nextQuestion() {
+		
+		// TODO: Need to add a check to see if it out of upper bound of index
+		var qoid = parseInt('{{ question.order }}')
+		if (qoid < parseInt('{{ n_questions }}')-1) {
+			ajaxChangeQuestion(1)
+		}
+	}
+
+	function backQuestion() {
+		var qoid = parseInt('{{ question.order }}')
+		if(qoid > 0) {
+			ajaxChangeQuestion(-1)
+		}
+	}
+
+	function ajaxChangeQuestion(direction) {
+		$.ajax({
+			url: ('/dash/ajax_change_question'),
+			data: {'poll_id': "{{ result.id }}", 'direction': direction},
+			method: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				location.reload();
+			}
+		})
+	}
+
+	function closeResult() {
+		if(confirm("Are you sure you want to close this poll? Once closed, you cannot reopen this result set.")) {
+			$.ajax({
+				url: ('/dash/ajax_close_poll'),
+				data: {'poll_id': "{{ result.id }}"},
+				method: 'POST',
+				dataType: 'json',
+				success: function (data) {
+					console.log(data);
+					if(data.success) {
+						window.location = "/dash";
+					}waiting_on
+				}
+			})
+		}
+	}
+	function checkDBSubmission(ith_check) {
+		// TODO: This function needs to submit a csrf_token to prevent forgery.
+		$.ajax({
+			url: '/dash/ajax_check_submissions',
+			data: {'poll_id': '{{ poll.id }}', 'result_id': '{{ result.id }}', 'waiting_on': '{{ question.id }}', 'check': ith_check},
+			method: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				drawChart(data.responses);
+			},
+			complete: function(data) {
+				setTimeout(function() {checkDBSubmission(ith_check+1);}, 5000);
+			}
+		});
+	}
+
+	function drawChart(results) {
+		backColors = ['rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)'
+		]
+		bordColors = ['rgba(255,99,132,1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)'
+		]
+		theLabels = ["a", "b", "c", "d", "e", "f"]
+		myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: theLabels.slice(0, results.length),
+				datasets: [{
+					label: '# of Votes',
+					data: results,
+					backgroundColor: backColors.slice(0, results.length),
+					borderColor: bordColors.slice(0, results.length),
+					borderWidth: 1
+				}]
+			},
+			options: {
+				animation: false,
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
+	}
+
+</script>
+</html>

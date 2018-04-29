@@ -7,15 +7,14 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'dash/style.css' %}">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-
-
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 	<div class="container">
+		
 		<div class="row">
 			<div class="col-sm-12">
-				<p>Welcome, {{ username }}</p>
+				<p>Welcome, <u>{{ username }}</u></p>
 			</div>
 		</div>
 		<div class="row">
@@ -24,17 +23,21 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-5">
+			<div class="col-sm-4">
 				<h2>Available Polls</h2>
 			</div>
-			<div class="col-sm-7">
+			<div class="col-sm-4">
 				<a href='/dash/create' class="btn btn-primary" role="button">Create New Poll</a>
+			</div>
+			<div class="col-sm-4">
+				<a href='/dash/launch' class="btn btn-success" role="button">Go To Live Poll</a>
 			</div>
 		</div>
 		<div class="row" id="polls_table">
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th>Date Created</th>
 						<th>Name</th>
 						<th>Delete</th>
 						<th>Launch</th>
@@ -43,6 +46,7 @@
 				<tbody>
 					{% for p in poll%}
 					<tr>
+						<td>{{ p.date_created }}</td>
 						<td><a href='/dash/review/{{ p.id }}'>{{ p.name }}</a></td>
 						<td>
 							<button id="{{ p.id }}" type="button" class="btn btn-outline-danger" onclick='return confirmDeletePoll("{{ p.name }}", this);'>
@@ -50,9 +54,9 @@
 							</button>
 						</td>
 						<td>
-							<a href="#" class="btn btn-outline-success" role="button">
+							<button class="btn btn-outline-success" value="{{ p.id }}" onclick='return confirmLaunchPoll("{{ p.name }}", "{{ p.id }}")'>
 								<i class="fas fa-paper-plane"></i>
-							</a>
+							</button>
 						</td>
 					</tr>
 					{% endfor %}
@@ -64,6 +68,38 @@
 			<div class="col-sm-12">
 				<h2>Result Sets</h2>
 			</div>
+		</div>
+		<div class="row" id="results_table">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Date Created</th>
+						<th>Result Name</th>
+						<th>Poll Name</th>
+						<th style="text-align: center;">Code</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for r in result%}
+					<tr>
+						<td>
+							{{ r.date_created }}
+						</td>
+						<td>
+						</td>
+						<td><a href='/dash/results/{{ r.id }}'>{{ r.poll.name }}</a></td>
+						<td style="text-align: center;">
+							{% if r.date_closed %}
+							<span class="badge badge-pill badge-light">closed</span>
+							{% else %}
+							<span class="badge badge-pill badge-success">{{ r.code }}</span>
+							{% endif %}
+						</td>
+						<td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 		</div>
 	</div>
 </body>
@@ -77,6 +113,22 @@
 				success: function (data) {
 					console.log(data);
 					window.location = "/dash";
+				}
+			})
+		}
+	}
+	function confirmLaunchPoll(name, id) {
+		if(confirm("Confirm to delete poll \""+name+"\"")) {
+			$.ajax({
+				url: ('/dash/ajax_launch_poll'),
+				data: {'poll_id': id},
+				method: 'POST',
+				dataType: 'json',
+				success: function (data) {
+					console.log(data);
+					if(data.success) {
+						window.location = "/dash/launch";
+					}
 				}
 			})
 		}
