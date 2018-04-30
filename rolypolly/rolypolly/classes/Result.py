@@ -11,8 +11,8 @@ class ResultClass():
     def setPollCode(self, req):
         self.poll_code = req.session.get('poll_code')
     
-    def getResult(self,):
-        user = User.objects.get(pk=request.session['member_id'])
+    def getResult(self, req):
+        user = User.objects.get(pk=req.session['member_id'])
         return Result.objects.all().filter(host=user).order_by('-date_created')
 
     def getPollCode(self,):
