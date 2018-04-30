@@ -17,12 +17,10 @@ class ResultClass(TextInterface):
         return Result.objects.get(code = poll_code).code
 
     def getQuestion(self,):
-        # return Result.objects.get(poll=result.poll.id, order=result.active_question)
         result = this.getResult()
         return Question.objects.get(poll=result.poll.id, order=result.active_question)
     
     def getAnswer(self,):
-        # return Result.objects.get(question=quest.id)
         quest = this.getQuestion()
         return Answer.objects.filter(question=quest.id)
         
