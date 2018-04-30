@@ -17,10 +17,11 @@ from hashids import Hashids
 
 
 def index(request):
-
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
+		print(user.id)
 		poll = Poll.objects.all().filter(host_id=user.id).order_by('-date_created')
+
 		result = Result.objects.all().filter(host=user).order_by('-date_created')
 	else:
 		return redirect('/login')
@@ -129,12 +130,13 @@ def close_poll(request):
 @csrf_exempt
 def save_poll(request):
 	try:
+		user = User.objects.get(pk=request.session['member_id'])
 		data = request.POST['data']
 		poll_name = request.POST['poll_name']
 		data = json.loads(data)
 		questions = data
 
-		poll = Poll(name=poll_name, host_id=1)
+		poll = Poll(name=poll_name, host_id=user.id)
 		poll.save()
 		qi = 0
 		for q in questions:
@@ -155,13 +157,17 @@ def save_poll(request):
 
 @csrf_exempt
 def update_poll(request):
+	if 'member_id' in request.session.keys():
+		user = User.objects.get(pk=request.session['member_id'])
+	else:
+		redirect('/login')
 	try:
 		data = request.POST['data']
 		poll_name = request.POST['poll_name']
 		poll_id = request.POST['poll_id']
 		data = json.loads(data)
 		questions = data
-		poll = Poll.objects.get(pk=poll_id)
+		poll = Poll.objects.get(pk=poll_id, host_id=user.id)
 		poll.name = poll_name
 		poll.save()
 		qi = 0
