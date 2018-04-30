@@ -20,9 +20,7 @@ def index(request):
 
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
-		print(user.id)
 		poll = Poll.objects.all().filter(host_id=user.id).order_by('-date_created')
-		print(poll)
 		result = Result.objects.all().filter(host=user).order_by('-date_created')
 	else:
 		return redirect('/login')
