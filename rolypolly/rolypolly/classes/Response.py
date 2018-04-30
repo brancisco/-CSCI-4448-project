@@ -5,7 +5,7 @@ from dash.models import *
 
 class Response():
     def __init__(self,):
-        poll_code = ''
+        self.poll_code = ''
     
     def setPollCode(self, req):
         self.poll_code = req.session.get('poll_code')
