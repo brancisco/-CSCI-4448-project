@@ -4,11 +4,11 @@ from take.models import Response
 from dash.models import *
 
 class Response():
-    def __init__(self):
-        pass
+    def __init__(self,):
+        poll_code = ''
     
-    # def setPolId(self, pol_id):
-    #     self.pol_id = pol_id
+    def setPollCode(self, req):
+        self.poll_code = req.session.get('poll_code')
 
     def setQuestion(self, qid):
         answer = this.getAnswer()
@@ -21,18 +21,17 @@ class Response():
         result = this.getResult()
         question = this.getQuestion()
         request.session.modified = True
-        r = Response(result_id=result.id, question_id=quest.id, answer_id=ais
+        r = Response(result_id=result.id, question_id=quest.id, answer_id=aid)
         r.save()
     
     def getPolId(self, ):
-        return request.session.get('poll_id')
+        return 
     
     def getPollCode(self,):
-        return request.session.get('poll_code')
+        return self.poll_code
     
     def getResult(self,):
-        poll_code = this.getPolId()
-        return Result.objects.get(code = poll_code)
+        return Result.objects.get(code = this.poll_code)
     
     def getQuestion(self, ):
         result = this.getResult()
@@ -40,5 +39,4 @@ class Response():
     
     def getAnswer(self, ):
         quest = this.getQuestion()
-        # request.POST.get('answer')
         return Answer.objects.filter(question = quest.id)
