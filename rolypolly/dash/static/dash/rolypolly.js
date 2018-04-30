@@ -21,6 +21,9 @@ class Poll {
 	getAId(q_ind, a_ind) {
 		return this.questions[q_ind].getAId(a_ind);
 	}
+	getNumQuestion() {
+		return this.questions.length;
+	}
 	addQuestion(text) {
 		this.questions.push(new Question(text));
 		return this.questions.length-1;

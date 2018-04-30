@@ -45,7 +45,7 @@
 
 	function updateGUI() {
 		var GUI = new PollGUIBase();
-		for(var i = 0; i < poll.questions.length; i ++) {
+		for(var i = 0; i < poll.getNumQuestion(); i ++) {
 			GUI = new QuestionDecorator(GUI, poll.getQuestion(i), i);
 			var answers = poll.getAnswers(i);
 			for(var j = 0; j < answers.length; j ++) {
