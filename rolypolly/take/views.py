@@ -34,8 +34,9 @@ def index(request):
         err = 'No question to answer ¯\_(ツ)_/¯'
         return render(request, 'take/takePoll.html', {'pollName':pollName, 'err': err})
 
-    if request.method == "POST" and str(quest.id) not in request.session['answered']:
-
+    if request.method == "POST":
+        if str(quest.id) in request.session['answered']:
+            return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code})
         aid = request.POST.get('answer')
         request.session['answered'][str(quest.id)] = True
         request.session.modified = True
@@ -44,9 +45,7 @@ def index(request):
         return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code, 'response':aid})
         # except:
         #     return JsonResponse({'success': False})
-    else:
-        return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code})
-
+        
     return render(request, 'take/takePoll.html', {'poll':poll, 'question':question, 'answer':ans})
 
 @csrf_exempt
