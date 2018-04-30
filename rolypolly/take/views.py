@@ -34,10 +34,9 @@ def index(request):
         err = 'No question to answer ¯\_(ツ)_/¯'
         return render(request, 'take/takePoll.html', {'pollName':pollName, 'err': err})
 
-    if request.method == "POST":
-        # try:
+    if request.method == "POST" and str(quest.id) not in request.session['answered']:
+
         aid = request.POST.get('answer')
-        print(request.session['answered'])
         request.session['answered'][str(quest.id)] = True
         request.session.modified = True
         r = Response(result_id=result.id, question_id=quest.id, answer_id=aid)
@@ -46,8 +45,7 @@ def index(request):
         # except:
         #     return JsonResponse({'success': False})
     else:
-        if str(quest.id) in request.session['answered']:
-            return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code})
+        return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code})
 
     return render(request, 'take/takePoll.html', {'poll':poll, 'question':question, 'answer':ans})
 
