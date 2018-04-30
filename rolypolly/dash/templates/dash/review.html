@@ -18,6 +18,10 @@
 			</div>
 		</div>
 		<div class="row">
+			<div id='message_bar'class="col-sm-12">
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-sm-12">
 				<h1>Review</h1>
 			</div>
@@ -139,16 +143,47 @@
 
 	function savePoll() {
 		updatePollObj();
-		$.ajax({
-			url: '/dash/ajax_update_poll',
-			data: {'data': JSON.stringify(poll.questions), 'poll_name': $('#poll_name').val(), 'poll_id': $('#poll_id').val()},
-			method: 'POST',
-			dataType: 'json',
-			success: function (data) {
-				console.log(data);
-				reinitPoll(data)
+		$('#message_bar').html('');
+		if(checkPollName() && checkAnswers()) {
+			$.ajax({
+				url: '/dash/ajax_update_poll',
+				data: {'data': JSON.stringify(poll.questions), 'poll_name': $('#poll_name').val(), 'poll_id': $('#poll_id').val()},
+				method: 'POST',
+				dataType: 'json',
+				success: function (data) {
+					console.log(data);
+					reinitPoll(data)
+				}
+			})
+		}
+	}
+	function checkPollName() {
+		if ($('#poll_name').val() == '') {
+			$('#message_bar').append(returnErrorHtml('Poll name cannot be empty.'));
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
+	function checkAnswers() {
+		for(var i = 0; i < poll.getNumQuestion(); i ++) {
+			var answers = poll.getAnswers(i);
+			if(answers.length == 0) {
+				$('#message_bar').append(returnErrorHtml('All Questions must have at least 1 answer.'));
+				return false;
 			}
-		})
+		}
+		return true;
+	}
+
+	function returnErrorHtml(error) {
+		return '<div class="alert alert-danger" role="alert">\
+			  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>\
+			  <span class="sr-only">Error:</span> \
+			  '+ error + '\
+			</div>';
 	}
 
 </script>
