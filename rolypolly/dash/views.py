@@ -20,7 +20,9 @@ def index(request):
 
 	if 'member_id' in request.session.keys():
 		user = User.objects.get(pk=request.session['member_id'])
+		print(user.id)
 		poll = Poll.objects.all().filter(host_id=user.id).order_by('-date_created')
+		print(poll)
 		result = Result.objects.all().filter(host=user).order_by('-date_created')
 	else:
 		return redirect('/login')
@@ -133,8 +135,9 @@ def save_poll(request):
 		poll_name = request.POST['poll_name']
 		data = json.loads(data)
 		questions = data
+		user = User.objects.get(pk=request.session['member_id'])
 
-		poll = Poll(name=poll_name, host_id=1)
+		poll = Poll(name=poll_name, host_id=user.id)
 		poll.save()
 		qi = 0
 		for q in questions:
