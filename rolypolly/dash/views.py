@@ -135,7 +135,6 @@ def save_poll(request):
 		poll_name = request.POST['poll_name']
 		data = json.loads(data)
 		questions = data
-		user = User.objects.get(pk=request.session['member_id'])
 
 		poll = Poll(name=poll_name, host_id=user.id)
 		poll.save()

@@ -79,10 +79,8 @@ WSGI_APPLICATION = 'rolypolly.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'root',
-        'HOST': 'localhost',
         'OPTIONS': {
-            'read_default_file': '/Users/lauren.raddatz/spring18/CSCI-4448-project/rolypolly/rolypolly.cnf',
+            'read_default_file': '/Users/brandonaguirre/Projects/cnf/rolypolly.cnf',
         },
     }
 }

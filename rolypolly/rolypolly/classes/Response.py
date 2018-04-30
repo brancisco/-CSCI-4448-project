@@ -1,42 +1,35 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-from take.models import Response
-from dash.models import *
 
-class Response():
-    def __init__(self,):
-        poll_code = ''
-    
-    def setPollCode(self, req):
-        self.poll_code = req.session.get('poll_code')
+from TextInterface import TextInterface
 
-    def setQuestion(self, qid):
-        answer = this.getAnswer()
-        result = this.getResult()
-        request.session.modified = True
-        r = Response(result_id=result.id, question_id=qid, answer_id=answer.id)
-        r.save()
+class Response(TextInterface):
+    def __init__(self):
+        self.pid = None
+        self.pol_id = None
+        self.qid = None
+        self.aid = None
     
-    def setAnswer(self, aid):
-        result = this.getResult()
-        question = this.getQuestion()
-        request.session.modified = True
-        r = Response(result_id=result.id, question_id=quest.id, answer_id=aid)
-        r.save()
+    def setPid(self, pid):
+        self.pid = pid
+    
+    def setPolId(self, pol_id):
+        self.pol_id = pol_id
+
+    def setQid(self, qid):
+        self.qid = qid
+    
+    def setAid(self, aid):
+        self.aid = aid
+    
+    def getPid(self, ):
+        return self.pid
     
     def getPolId(self, ):
-        return 
+        return self.pol_id
     
-    def getPollCode(self,):
-        return self.poll_code
+    def getQid(self, ):
+        return self.qid
     
-    def getResult(self,):
-        return Result.objects.get(code = this.poll_code)
-    
-    def getQuestion(self, ):
-        result = this.getResult()
-        return Question.objects.get(poll = result.poll.id, order = result.active_question)
-    
-    def getAnswer(self, ):
-        quest = this.getQuestion()
-        return Answer.objects.filter(question = quest.id)
+    def getAid(self, ):
+        return self.aid

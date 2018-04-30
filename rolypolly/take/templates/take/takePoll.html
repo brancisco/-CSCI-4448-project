@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<title>Take Poll</title>
 	{% load static %}
@@ -8,7 +7,6 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 	<div id="main_content">
 		<div class="poll-name">
@@ -24,14 +22,11 @@
 				{% for a in answer %}
 				<div style="font-weight: bold; padding-bottom: 2%;">
 					<input type="radio" name="answer" value="{{ a.id }}">
-					<label style="padding-left: 5%; font-size: 16px;">{{ a.text }}</label>
-					<br>
+					<label style="padding-left: 5%; font-size: 16px;">{{ a.text }}</label> <br>
 				</div>
 				{% endfor %}
 			</div>
-			<button class="button">
-				<strong>Submit</strong>
-			</button>
+			<button class="button"><strong>Submit</strong></button>
 		</form>
 		<font color="red">{{ err }}</font>
 	</div>
