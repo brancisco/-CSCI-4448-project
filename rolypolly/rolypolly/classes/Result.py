@@ -15,7 +15,6 @@ class ResultClass(TextInterface):
     def getPollCode(self,):
         poll_code = request.session.get('poll_code')
         return Result.objects.get(code = poll_code).code
-        
 
     def getQuestion(self,):
         # return Result.objects.get(poll=result.poll.id, order=result.active_question)
