@@ -7,19 +7,37 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from rolypolly.classes.User import *
 from dash.models import *
+from django.template import loader
+
 
 def index(request):
+	if request.session.get('thanks'):
+		del request.session['thanks']
+		t = loader.get_template('welcome/thanks.html')
+		return HttpResponse(t.render())
+
 	message = ''
+	participant = Participant()
+	if request.session.get('started'):
+		return redirect('/take')
 	if request.method == "POST":
 		try:
-			poll = Result.objects.get(code=request.POST['code'])
-			message = request.POST['name']
-			request.session['poll_code'] = request.POST['code']
+			request.session.set_expiry(900)
+			request.session['started'] = True
+			request.session['answered'] = {}
+			result = Result.objects.get(code=request.POST['code'])
+
+			participant.setPollCode(request.POST['code'])
+			participant.setName(request.POST['name'])
+			participant.setId(request.session['started'])
+
+			request.session['poll_code'] = participant.getPollCode()
+			request.session['qoid'] = result.active_question
+
 			return redirect('/take')
 		except:
 			message = 'No poll with that code'
 	return render(request, 'welcome/welcome.html', {'message': message})
-	# return HttpResponse("Welcome {}, this is our login / sign up page.".format(user.getName()))
 
 def signup(request):
 	user = None
@@ -60,5 +78,5 @@ def login(request):
 
 	if 'member_id' in request.session.keys():
 		return redirect('/dash')
-		
+
 	return render(request, 'welcome/login.html', {'message': message})

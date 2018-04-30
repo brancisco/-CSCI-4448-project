@@ -14,29 +14,30 @@ class User(ABC):
 		return self.name
 
 class Participant(User):
-	def __init__(self):
-		self.name = None
-		self.id = None
-		self.response = None
-		self.pol_id = None
+	def __init__(self, responseDict={}, name=None, uid=None, poll_code=None):
+		self.name = self.setName(name)
+		self.id = self.setId(uid)
+		self.response = responseDict
+		self.poll_code = self.setPollCode(poll_code)
 
-	def Participant(self, ):
-		pass
+	def getId(self):
+		return self.id
 
-	def dbStoreResponse(self, ):
-		pass
+	def setId(self, uid):
+		self.id = uid
 
-	def getId(self, ):
-		pass
+	def setPollCode(self, code):
+		self.code = code
 
-	def setId(self, id):
-		pass
+	def getPollCode(self):
+		return self.code
 
-	def setPollId(self, id):
-		pass
+	def setResponse(self, qoid):
+		self.response[qoid] = True
 
-	def getPollId(self, ):
-		pass
+	def getResponse(self, qoid):
+		return self.response[qoid]
+
 
 class Host(User):
 	def __init__(self, name=None, id=None):

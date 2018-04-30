@@ -12,10 +12,7 @@
 <body>
 	<div id="main_content">
 		<div class="poll-name">
-			<h2>
-				<strong>{{ poll.name }}</strong>
-			</h2>
-			<br>
+			<h2><strong>{{ poll.name }}</strong></h2><br>
 		</div>
 
 		<form action="/take/" method="post">
@@ -40,30 +37,29 @@
 	</div>
 </body>
 <script>
-	$(document).ready(function () {
+	$(document).ready(function() {
 		checkDatabase(0);
 	});
 
 	function checkDatabase(ith_check) {
 		$.ajax({
 			url: '/take/ajax_wait',
-			data: { 'poll_id': '{{ poll.id }}', 'waiting_on': '{{ question.id }}', 'check': ith_check },
+			data: {'poll_id': '{{ poll.id }}', 'waiting_on': '{{ question.id }}', 'check': ith_check},
 			method: 'POST',
 			dataType: 'json',
 			success: function (data) {
 				console.log(data);
-				if (data.NEXTQ && data.NEXTQ === true) {
+				if(data.NEXTQ && data.NEXTQ === true) {
 					window.location = '/take';
 				}
-				if (data.CHECK_NUMBER == 'TIMED_OUT') {
+				if(data.CHECK_NUMBER == 'TIMED_OUT') {
 					window.location = '/welcome'
 				}
 			},
-			complete: function (data) {
-				setTimeout(function () { checkDatabase(ith_check + 1); }, 5000);
+			complete: function(data) {
+				setTimeout(function() {checkDatabase(ith_check+1);}, 5000);
 			}
 		});
 	}
 </script>
-
 </html>
