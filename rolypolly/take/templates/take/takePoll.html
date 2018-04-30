@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Take Poll</title>
 	{% load static %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'welcome/style.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="refresh" content="10" >
 </head>
+
 <body>
 	<div id="main_content">
 		<div class="poll-name">
-			<h2><strong>{{ pollName }}</strong></h2><br>
+			<h2>
+				<strong>{{ poll.name }}</strong>
+			</h2>
+			<br>
 		</div>
 
 		<form action="/take/" method="post">
@@ -22,13 +27,43 @@
 				{% for a in answer %}
 				<div style="font-weight: bold; padding-bottom: 2%;">
 					<input type="radio" name="answer" value="{{ a.id }}">
-					<label style="padding-left: 5%; font-size: 16px;">{{ a.text }}</label> <br>
+					<label style="padding-left: 5%; font-size: 16px;">{{ a.text }}</label>
+					<br>
 				</div>
 				{% endfor %}
 			</div>
-			<button class="button"><strong>Submit</strong></button>
+			<button class="button">
+				<strong>Submit</strong>
+			</button>
 		</form>
 		<font color="red">{{ err }}</font>
 	</div>
 </body>
+<script>
+	$(document).ready(function () {
+		checkDatabase(0);
+	});
+
+	function checkDatabase(ith_check) {
+		$.ajax({
+			url: '/take/ajax_wait',
+			data: { 'poll_id': '{{ poll.id }}', 'waiting_on': '{{ question.id }}', 'check': ith_check },
+			method: 'POST',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				if (data.NEXTQ && data.NEXTQ === true) {
+					window.location = '/take';
+				}
+				if (data.CHECK_NUMBER == 'TIMED_OUT') {
+					window.location = '/welcome'
+				}
+			},
+			complete: function (data) {
+				setTimeout(function () { checkDatabase(ith_check + 1); }, 5000);
+			}
+		});
+	}
+</script>
+
 </html>
