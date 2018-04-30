@@ -3,7 +3,7 @@
 from take.models import Response
 from dash.models import *
 
-class Response():
+class ResponseClass():
     def __init__(self,):
         self.poll_code = ''
     
