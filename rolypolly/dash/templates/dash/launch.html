@@ -32,7 +32,7 @@
 					<!-- List group -->
 					<ul class="list-group">
 						{% for a in answer %}
-						<li class="list-group-item"><h4>{{ a.text }}</h4></li>
+						<li class="list-group-item is{{ a.is_correct }}"><h4>{{ a.text }}</h4></li>
 						{% endfor %}
 					</ul>
 				</div>
@@ -42,6 +42,9 @@
 					</div>
 					<div class="col-sm-4">
 						<button class="btn btn-outline-secondary" onclick="return nextQuestion()">Next <i class="fas fa-chevron-right"></i></button>
+					</div>
+					<div class="col-sm-4">
+						<button class="btn btn-outline-primary" onclick="return showCorrect()">Reveal</button>
 					</div>
 					<div class="col-sm-4">
 						<button class="btn btn-outline-danger" onclick="return closeResult()">Close</button>
@@ -75,6 +78,10 @@
 		if(qoid > 0) {
 			ajaxChangeQuestion(-1)
 		}
+	}
+
+	function showCorrect() {
+		$('.isTrue').addClass('list-group-item-success');
 	}
 
 	function ajaxChangeQuestion(direction) {
