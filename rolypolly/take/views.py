@@ -35,9 +35,9 @@ def index(request):
         return render(request, 'take/takePoll.html', {'pollName':pollName, 'err': err})
 
     if request.method == "POST":
-        # try:
+        if str(quest.id) in request.session['answered']:
+            return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code})
         aid = request.POST.get('answer')
-        print(request.session['answered'])
         request.session['answered'][str(quest.id)] = True
         request.session.modified = True
         r = Response(result_id=result.id, question_id=quest.id, answer_id=aid)
@@ -45,10 +45,7 @@ def index(request):
         return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code, 'response':aid})
         # except:
         #     return JsonResponse({'success': False})
-    else:
-        if str(quest.id) in request.session['answered']:
-            return render(request, 'take/waitPage.html', {'poll':poll, 'poll_code':poll_code})
-
+        
     return render(request, 'take/takePoll.html', {'poll':poll, 'question':question, 'answer':ans})
 
 @csrf_exempt
