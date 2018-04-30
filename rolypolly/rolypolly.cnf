@@ -1,6 +1,0 @@
-[client]
-database = rolypolly
-user = root
-password = root
-socket = /Applications/MAMP/tmp/mysql/mysql.sock
-default-character-set = utf8
