@@ -4,17 +4,19 @@
 from take.models import Response
 from dash.models import *
 
-class ResultClass(TextInterface):
-    def __init__(self):
-        pass
+class ResultClass():
+    def __init__(self,):
+        self.poll_code = ''
+
+    def setPollCode(self, req):
+        self.poll_code = req.session.get('poll_code')
     
-    def getResult(self,):
-        user = User.objects.get(pk=request.session['member_id'])
-        reutrn Result.objects.all().filter(host=user).order_by('-date_created')
+    def getResult(self, req):
+        user = User.objects.get(pk=req.session['member_id'])
+        return Result.objects.all().filter(host=user).order_by('-date_created')
 
     def getPollCode(self,):
-        poll_code = request.session.get('poll_code')
-        return Result.objects.get(code = poll_code).code
+        return this.poll_code
 
     def getQuestion(self,):
         result = this.getResult()

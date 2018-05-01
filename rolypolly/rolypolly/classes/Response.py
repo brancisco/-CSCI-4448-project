@@ -3,9 +3,9 @@
 from take.models import Response
 from dash.models import *
 
-class Response():
+class ResponseClass():
     def __init__(self,):
-        poll_code = ''
+        self.poll_code = ''
     
     def setPollCode(self, req):
         self.poll_code = req.session.get('poll_code')
@@ -23,9 +23,6 @@ class Response():
         request.session.modified = True
         r = Response(result_id=result.id, question_id=quest.id, answer_id=aid)
         r.save()
-    
-    def getPolId(self, ):
-        return 
     
     def getPollCode(self,):
         return self.poll_code
